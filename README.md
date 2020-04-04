@@ -2,7 +2,7 @@
 
 ## An Alfred KeePassXC Workflow
 
-![usageExample][usage]
+![Screenshot](https://github.com/Angoll/KPass/blob/master/example.gif)
 
 ## Features
 
@@ -36,5 +36,3 @@ Run **kpassinit** KPass Setup and follow the instructions:
 Any feedback is welcome!
 
 Love it? Give it a ⭐️ or a tweet to help spread the word!
-
-[logo]: https://github.com/Angoll/KPass/blob/master/example.gif "KPass Example"
