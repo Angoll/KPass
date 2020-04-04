@@ -37,4 +37,4 @@ Any feedback is welcome!
 
 Love it? Give it a ⭐️ or a tweet to help spread the word!
 
-[logo]: https://github.com/Angoll/KPass/example.gif "KPass Example"
+[logo]: https://github.com/Angoll/KPass/blob/master/example.gif "KPass Example"
