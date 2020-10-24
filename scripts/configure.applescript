@@ -5,6 +5,11 @@ app.includeStandardAdditions = true;
 
 var alfredApp = Application('com.runningwithcrayons.Alfred');
 var bundleId = $.getenv('alfred_workflow_bundleid')
+var keychainItem = $.getenv('keychainItem')
+
+if (! keychainItem) {
+    keychainItem = "KPass_AlfredWorkflow"
+}
 
 
 try {
@@ -27,7 +32,6 @@ try {
     });
 	keychain = keychain[0]
 
-
     // Ask for KeepassXC Database password
     var response = app.displayDialog("KeePassXC Database password", {
         defaultAnswer: "",
@@ -42,8 +46,21 @@ try {
     password = response.textReturned.replace(/\\/g, '\\\\').replace(/\"/g, '\\"');
     
     // Create a new password
-    response = app.doShellScript("security add-generic-password -a $(id -un) -c 'kaiw' -C 'kaiw' -D 'KeepasXC Integration' -j 'Alfred KeepasXC Integration Database' -s 'KPass_AlfredWorkflow' -w \"" + password + "\" -U " + keychain);
-    
+    response = app.doShellScript("security add-generic-password -a $(id -un) -c 'kaiw' -C 'kaiw' -D 'KeepasXC Integration' -j 'Alfred KeepasXC Integration Database' -s \""+ keychainItem + "\" -w \"" + password + "\" -U " + keychain);
+
+    // Ask for KeepassXC Keyfile
+    var response = app.displayDialog("KeePassXC Database Keyfile", {
+        defaultAnswer: "",
+        buttons: ["Cancel", "Continue"],
+        defaultButton: "Continue",
+        hiddenAnswer: false,
+        withTitle: "[Optionally]ÊPlease introduce the path of the keyfile",
+        withIcon: Path("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/Lockedicon.icns")
+    });
+
+    // Get keyfile if any
+    keePassKeyFile = response.textReturned.replace(/\\/g, '\\\\').replace(/\"/g, '\\"');
+
     // Configure Alfred env variables
     alfredApp.setConfiguration('keychain', {
         toValue: keychain.replace(/(^")|("$)/,""),
@@ -51,6 +68,18 @@ try {
         exportable: false
     });
     
+    alfredApp.setConfiguration('keychainItem', {
+        toValue: keychainItem.toString(),
+        inWorkflow: bundleId,
+        exportable: true
+    });
+    
+    alfredApp.setConfiguration('keePassKeyFile', {
+        toValue: keePassKeyFile.toString(),
+        inWorkflow: bundleId,
+        exportable: false
+    });
+
     alfredApp.setConfiguration('database', {
         toValue: database.toString(),
         inWorkflow: bundleId,
