@@ -18,7 +18,7 @@ function get_errorInfo {
 }
 
 
-data=$(get_keys $1)
+data=$(get_keys "$1")
 if [ $? -ne 0 ]; then
 	echo $(get_errorInfo)
 else
