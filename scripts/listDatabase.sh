@@ -1,29 +1,22 @@
-export PATH='/usr/local/bin/:/usr/bin'
+export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/'
 
 
 useKeePassKeyFile=""
 if [[ ! -z ${keePassKeyFile} ]]; then
-    useKeePassKeyFile="--key-file \"${keePassKeyFile}\""
+    useKeePassKeyFile="--key-file ${keePassKeyFile}"
 fi
 
 
 function get_keys() {
     security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |\
-           keepassxc-cli ls -R -q  ${useKeePassKeyFile} -f "$database" | grep -Ev '(/|\[empty\]?)$'
+           keepassxc-cli locate ${useKeePassKeyFile} "$database" {query}
 }
 
 function get_errorInfo {
     exec 3<&1
     security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" 2>&3 |\
-           keepassxc-cli ls -R ${useKeePassKeyFile} -f "$database" 2>&3 | grep -Ev '(/|\[empty\]?)$'
+           keepassxc-cli locate ${useKeePassKeyFile} "$database" {query} 2>&3
     exec 3>&-
-}
-
-function build_entry() {
-    local entry=$1
-    #local title=${entry##*/}
-    local title=${entry}
-    jq -n --arg entry ${entry} --arg title ${title} --arg iconPath "${PWD}/icon.png" '{"uid": $entry, "title": $title, "subtitle": $entry , "arg": $entry, "autocomplete": $entry, "icon": {"type":"png", "path": $iconPath}}'
 }
 
 if [[ -z ${database} ]] || [[ -z ${keychain} ]];
@@ -38,12 +31,6 @@ if [ $? -ne 0 ]; then
     info=${info//$'\n'/}
     echo "{\"items\": [{\"title\":\"Error listing database, please check config: Error: ${info}\"}]}";
     exit
+else
+    echo ${keys[@]} | sed 's/ \//\n\//g' | awk -v iconPath="${PWD}/icon.png" '{printf "{\"uid\":\"%s\", \"title\":\"%s\", \"subtitle\":\"%s\", \"arg\":\"%s\", \"autocomplete\": \"%s\", \"icon\":{\"type\":\"png\", \"path\": \"%s\"}}", $0, $0, $0, $0, $0, iconPath}' | jq -c -s '{"items": .}'
 fi
-
-OIFS=$IFS
-IFS=$'\n'
-keys=($(get_keys))
-for entry in ${keys[@]}; do
-    build_entry ${entry}
-done | jq -c -s '{"items": .}'
-IFS=$OIFS
