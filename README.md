@@ -32,7 +32,19 @@ Run **kpassinit** KPass Setup and follow the instructions:
 
 ## Known problems
 
-#### Keepass file appears unselectable
+### Slowness to load database
+
+Try reconfiguring the format and number of transform rounds of your database (KDF), increasing the format value and reduce the transformation rounds.
+
+This Alfred workflow integrate with keepassxc using keepassxc cli, the script add a very low overhead and all time is spend in opening the database.
+
+Having a high transformation rounds allows to slow down bruteforce attacks so pickup a number that is seems right for you.
+
+More information:
+ - https://github.com/Angoll/KPass/issues/17#issuecomment-888096305
+ - https://github.com/keepassxreboot/keepassxc/issues/6778
+
+### Keepass file appears unselectable
 
 Open the Alfred workflow from the Alfred App, double click the Run Script /usr/bin/osascript connected to the kpassinit. And remove the following line (on line 20)
 
