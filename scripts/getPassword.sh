@@ -1,4 +1,4 @@
-export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/'
+export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/:${PATH}'
 
 keePassKeyFile=""
 if [[ ! -z ${keyfile} ]]; then

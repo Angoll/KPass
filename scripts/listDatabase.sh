@@ -1,4 +1,4 @@
-export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/'
+export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/:${PATH}'
 
 
 useKeePassKeyFile=""
@@ -9,13 +9,13 @@ fi
 
 function get_keys() {
     security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |\
-           keepassxc-cli locate ${useKeePassKeyFile} "$database" {query}
+           keepassxc-cli locate ${useKeePassKeyFile} "$database" / -q
 }
 
 function get_errorInfo {
     exec 3<&1
     security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" 2>&3 |\
-           keepassxc-cli locate ${useKeePassKeyFile} "$database" {query} 2>&3
+           keepassxc-cli locate ${useKeePassKeyFile} "$database" / -q 2>&3
     exec 3>&-
 }
 
