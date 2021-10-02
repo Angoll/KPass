@@ -46,7 +46,7 @@ try {
     password = response.textReturned.replace(/\\/g, '\\\\').replace(/\"/g, '\\"');
     
     // Create a new password
-    response = app.doShellScript("security add-generic-password -a $(id -un) -c 'kaiw' -C 'kaiw' -D 'KeepasXC Integration' -j 'Alfred KeepasXC Integration Database' -s \""+ keychainItem + "\" -w \"" + password + "\" -U " + keychain);
+    response = app.doShellScript("security add-generic-password -a $(id -un) -c 'kaiw' -C 'kaiw' -D 'KeepasXC Integration' -j 'Alfred KeepasXC Integration Database' -s '"+ keychainItem + "' -w '" + password + "' -U " + keychain);
 
     // Ask for KeepassXC Keyfile
     var response = app.displayDialog("KeePassXC Database Keyfile", {
