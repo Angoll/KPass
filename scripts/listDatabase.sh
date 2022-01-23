@@ -1,4 +1,4 @@
-export PATH='/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/:${PATH}'
+export PATH=/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/MacOS/:/opt/homebrew/bin/:$PATH
 
 
 useKeePassKeyFile=""
@@ -6,11 +6,21 @@ if [[ ! -z ${keePassKeyFile} ]]; then
     useKeePassKeyFile="--key-file ${keePassKeyFile}"
 fi
 
+cacheDir=$(dirname ${keychain})
+cacheFile="$cacheDir/kpass_db.cache"
+if [ ! -f "$cacheFile" ];then
+	lastModifiedTime=0
+else
+	lastModifiedTime=$(/opt/homebrew/opt/coreutils/libexec/gnubin/stat -c %Y $cacheFile)
+fi
+currTime=$(date +%s)
+interval=$(expr $currTime - $lastModifiedTime)
 
 function get_keys() {
-    security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |\
-           keepassxc-cli locate ${useKeePassKeyFile} "$database" / -q
-}
+
+    #security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |keepassxc-cli locate -q ${useKeePassKeyFile} "$database" "{query}" 
+    security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |keepassxc-cli locate ${useKeePassKeyFile} "$database" / -q 
+} 
 
 function get_errorInfo {
     exec 3<&1
@@ -25,7 +35,12 @@ then
     exit
 fi
 
-keys=($(get_keys))
+if [ ! -f "$cacheFile" ] || [ $interval -gt 60 ];then
+	# update cache file
+	echo "$(get_keys)" > "$cacheFile"
+fi
+# get keys from cache 
+keys=($(cat $cacheFile | grep -i "{query}" ))
 if [ $? -ne 0 ]; then
     info=$(get_errorInfo | sed 's/"/\\"/g')
     info=${info//$'\n'/}
