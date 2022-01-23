@@ -17,6 +17,7 @@
  - Alfred 4
  - KeePassXC
  - A created KeePassXC database
+ - homebrew installed( https://brew.sh/ )
  - jq installed  ( https://stedolan.github.io/jq/download/ )
 
 #### Configuration
