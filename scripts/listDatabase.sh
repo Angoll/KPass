@@ -17,8 +17,6 @@ currTime=$(date +%s)
 interval=$(expr $currTime - $lastModifiedTime)
 
 function get_keys() {
-
-    #security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |keepassxc-cli locate -q ${useKeePassKeyFile} "$database" "{query}" 
     security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |keepassxc-cli locate ${useKeePassKeyFile} "$database" / -q 
 } 
 
