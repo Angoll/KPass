@@ -8,16 +8,18 @@
 
 - List all entries from a KeePassXC database
 - Get the password for the selected entry, and put it in the clipboard
-- The password is copied to the transient clipboard. 
-
+- The password is copied to the transient clipboard.
+- Allow to cache the keys to a file. Default `disabled`
 
 ## Setup
 
 #### Prerequisites
- - Alfred 4
- - KeePassXC
- - A created KeePassXC database
- - jq installed  ( https://stedolan.github.io/jq/download/ )
+
+- Alfred 4
+- KeePassXC
+- A created KeePassXC database
+- homebrew installed( <https://brew.sh/> )
+- jq installed  ( <https://stedolan.github.io/jq/download/> )
 
 #### Configuration
 
@@ -29,6 +31,11 @@ Run **kpassinit** KPass Setup and follow the instructions:
 4. Enter the password for the KeePassXC database selected
 5. Done!
 
+#### Enable the cache
+
+In order to enable the cache, go to the Alfred workflow and into environment `[x]` set the env var `cacheFile` to a full file path where to store the cache. As an example `/Users/my_user/Library/Caches/kpass.cache`
+
+Finally the env var `cacheTimeout` controlls the recreation of cache in seconds.
 
 ## Known problems
 
@@ -41,8 +48,9 @@ This Alfred workflow integrate with keepassxc using keepassxc cli, the script ad
 Having a high transformation rounds allows to slow down bruteforce attacks so pickup a number that is seems right for you.
 
 More information:
- - https://github.com/Angoll/KPass/issues/17#issuecomment-888096305
- - https://github.com/keepassxreboot/keepassxc/issues/6778
+
+- <https://github.com/Angoll/KPass/issues/17#issuecomment-888096305>
+- <https://github.com/keepassxreboot/keepassxc/issues/6778>
 
 ### Keepass file appears unselectable
 
@@ -54,11 +62,10 @@ Open the Alfred workflow from the Alfred App, double click the Run Script /usr/b
 
 This will make any file selectable.
 
-
 ## References
-- https://www.alfredapp.com/
-- https://keepassxc.org/
 
+- <https://www.alfredapp.com/>
+- <https://keepassxc.org/>
 
 Any feedback is welcome!
 
