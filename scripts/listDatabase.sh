@@ -3,10 +3,10 @@ export PATH='/bin:/usr/local/bin/:/usr/bin:/Applications/KeePassXC.app/Contents/
 function get_db_keys {
     if [ ! -z "${keePassKeyFile}" ]; then
         security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |\
-            keepassxc-cli locate --key-file "${keePassKeyFile}" "${database}" / -q
+            keepassxc-cli search --key-file "${keePassKeyFile}" "${database}" - -q
     else
         security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" |\
-            keepassxc-cli locate "${database}" / -q
+            keepassxc-cli search "${database}" - -q
     fi
 }
 
@@ -34,8 +34,13 @@ function get_keys {
 
 function get_errorInfo {
     exec 3<&1
-    security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" 2>&3 |\
-        keepassxc-cli locate ${useKeePassKeyFile} '$database' / -q 2>&3
+    if [ ! -z "${keePassKeyFile}" ]; then
+        security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" 2>&3 |\
+            keepassxc-cli search --key-file "${keePassKeyFile}" "${database}" - -q 2>&3
+    else
+        security find-generic-password -a $(id -un) -c 'kpas' -C 'kpas' -s "${keychainItem}" -w "${keychain}" 2>&3 |\
+            keepassxc-cli search "${database}" - -q 2>&3
+    fi
     exec 3>&-
 }
 
