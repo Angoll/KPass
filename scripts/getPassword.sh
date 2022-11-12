@@ -27,5 +27,5 @@ data=$(get_keys "$1")
 if [ $? -ne 0 ]; then
 	echo $(get_errorInfo)
 else
-	echo $data
+	echo -n $data
 fi
