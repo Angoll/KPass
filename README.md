@@ -10,12 +10,13 @@
 - Get the password for the selected entry, and put it in the clipboard
 - The password is copied to the transient clipboard.
 - Allow to cache the keys to a file. Default `disabled`
+- By holding ⌘ will copy the username (Thanks <https://github.com/Angoll/KPass/issues/28#issuecomment-1174058448> )
 
 ## Setup
 
 #### Prerequisites
 
-- Alfred 4
+- Alfred 4 or 5
 - KeePassXC
 - A created KeePassXC database
 - homebrew installed( <https://brew.sh/> )
